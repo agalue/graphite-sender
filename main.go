@@ -76,7 +76,7 @@ func (graphite *Graphite) SendMetric(metric Metric) error {
 
 func main() {
 	graphite := Graphite{}
-	flag.StringVar(&graphite.Target, "target", "localhost:2003", "Graphite Target ServerN")
+	flag.StringVar(&graphite.Target, "target", "localhost:2003", "Graphite Target Server")
 	flag.StringVar(&graphite.Prefix, "prefix", "", "Graphite Prefix")
 	frequency := flag.Duration("frequency", 5*time.Second, "Frequency of packet generation")
 	flag.Parse()
