@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<telemetryd-config>
+    <listener name="Graphite-UDP-2003" class-name="org.opennms.netmgt.telemetry.listeners.UdpListener" enabled="true">
+        <parameter key="port" value="2003"/>
+        <parser name="Graphite-Parser" class-name="org.opennms.netmgt.telemetry.protocols.common.parser.ForwardParser" queue="Graphite" />
+    </listener>
+    <queue name="Graphite">
+        <adapter name="Graphite" class-name="org.opennms.netmgt.telemetry.protocols.graphite.adapter.GraphiteAdapter" enabled="true">
+            <parameter key="script" value="/opt/opennms/etc/telemetryd-adapters/graphite-telemetry-interface.groovy"/>
+             <package name="Graphite-Default">
+                <rrd step="30">
+                    <rra>RRA:AVERAGE:0.5:1:2016</rra>
+                    <rra>RRA:AVERAGE:0.5:12:1488</rra>
+                </rrd>
+            </package>
+        </adapter>
+    </queue>
+</telemetryd-config>

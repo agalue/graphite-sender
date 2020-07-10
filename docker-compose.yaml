@@ -1,0 +1,75 @@
+version: '3.7'
+
+services:
+
+  database:
+    container_name: database
+    hostname: database
+    image: postgres:12
+    environment:
+    - TZ=America/New_York
+    - POSTGRES_HOST=database
+    - POSTGRES_PORT=5432
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  opennms:
+    container_name: opennms
+    hostname: opennms
+    image: opennms/horizon:26.1.2
+    depends_on:
+    - database
+    command: [ -s ]
+    ports:
+    - 8980:8980
+    - 8101:8101
+    - 18980:18980
+    - 10514:10514/udp
+    - 1162:1162/udp
+    - 2003:2003/udp
+    volumes:
+    - ./opennms-overlay:/opt/opennms-overlay
+    environment:
+    - TZ=America/New_York
+    - POSTGRES_HOST=database
+    - POSTGRES_PORT=5432
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
+    - JAVA_OPTS=-Dcom.sun.management.jmxremote.port=18980 -Dcom.sun.management.jmxremote.rmi.port=18980 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=true
+    healthcheck:
+      test: curl -f -I http://opennms:8980/opennms/login.jsp
+      interval: 1m
+      timeout: 5s
+      retries: 3
+
+  helm:
+    container_name: helm
+    hostname: helm
+    image: opennms/helm:bleeding
+    depends_on:
+    - opennms
+    ports:
+    - 3000:3000
+    healthcheck:
+      test: curl -f -I http://helm:3000/login
+      interval: 1m
+      timeout: 5s
+      retries: 3
+
+  # Generate random numbers using Graphite
+  generator:
+    build: .
+    container_name: generator
+    hostname: generator
+    depends_on:
+    - opennms
+    environment:
+      TZ: America/New_York
+      TARGET: opennms:2003
+      PREFIX: onms
+      FREQUENCY: 30s
