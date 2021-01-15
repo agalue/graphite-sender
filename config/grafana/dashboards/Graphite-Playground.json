@@ -1,34 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_OPENNMS_PERFORMANCE",
-      "label": "OpenNMS Performance",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "opennms-helm-performance-datasource",
-      "pluginName": "OpenNMS Performance"
-    }
-  ],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "6.7.2"
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "Graph",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "opennms-helm-performance-datasource",
-      "name": "OpenNMS Performance",
-      "version": "1.0.0"
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -46,7 +16,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": null,
+  "id": 2,
   "links": [],
   "panels": [
     {
@@ -54,7 +24,14 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_OPENNMS_PERFORMANCE}",
+      "datasource": "OpenNMS-Performance",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "links": []
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -78,9 +55,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -117,6 +95,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:74",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -125,6 +104,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:75",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -139,7 +119,7 @@
       }
     }
   ],
-  "schemaVersion": 22,
+  "schemaVersion": 26,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -153,8 +133,5 @@
   "timezone": "",
   "title": "Graphite Playground",
   "uid": "EBMbK6MMk",
-  "variables": {
-    "list": []
-  },
   "version": 1
 }

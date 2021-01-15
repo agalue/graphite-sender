@@ -15,19 +15,7 @@ docker-compose up -d --build
 
 ## Configuration
 
-* Find the IP address of the container associated with the generator:
-
-```bash
-docker-compose exec generator ip addr | grep inet | grep -v 127.0.0.1
-```
-
-For example:
-
-```bash
-inet 172.19.0.5/16 brd 172.19.255.255 scope global eth0
-```
-
-* Create a requisition and add a node that represents the generator:
+Create a requisition and add a node that represents the generator:
 
 ```
 docker-compose exec opennms bash
@@ -36,22 +24,16 @@ docker-compose exec opennms bash
 Then,
 
 ```bash
+GENERATOR_IP=$(getent hosts generator | awk '{print $1}')
 provision.pl requisition add Docker
 provision.pl node add Docker generator generator
-provision.pl interface add Docker generator 172.19.0.5
-provision.pl interface set Docker generator 172.19.0.5 snmp-primary N
+provision.pl interface add Docker generator $GENERATOR_IP
+provision.pl interface set Docker generator $GENERATOR_IP snmp-primary N
 provision.pl requisition import Docker
+exit
 ```
 
-> *WARNING*: Replace 127.19.0.5 with the correct container IP
+## Visualization
 
-Finally, exit the container.
-
-## Grafana
-
-* Enable Helm
-
-* Create a Datasource for OpenNMS Performance, using `http://opennms:8980/opennms` as the URL.
-
-* Import the provided Dashboard (assuming the generator was created as shown above).
+There is ready to use dashboard available in Grafana, accessible through `http://localhost:3000`, called "Graphite Playground".
 

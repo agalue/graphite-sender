@@ -21,7 +21,7 @@ services:
   opennms:
     container_name: opennms
     hostname: opennms
-    image: opennms/horizon:26.1.2
+    image: opennms/horizon:27.0.3
     depends_on:
     - database
     command: [ -s ]
@@ -33,7 +33,7 @@ services:
     - 1162:1162/udp
     - 2003:2003/udp
     volumes:
-    - ./opennms-overlay:/opt/opennms-overlay
+    - ./config/opennms:/opt/opennms-overlay
     environment:
     - TZ=America/New_York
     - POSTGRES_HOST=database
@@ -50,11 +50,14 @@ services:
   helm:
     container_name: helm
     hostname: helm
-    image: opennms/helm:bleeding
+    image: opennms/helm:6.0.0
     depends_on:
     - opennms
     ports:
     - 3000:3000
+    volumes:
+    - ./config/grafana/provisioning/:/etc/grafana/provisioning/
+    - ./config/grafana/dashboards/:/var/lib/grafana/dashboards/
     healthcheck:
       test: curl -f -I http://helm:3000/login
       interval: 1m
